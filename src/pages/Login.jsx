@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState } from "react";
 import Input from "../components/Input";
 import Button from "../components/Button";
@@ -6,43 +7,43 @@ import { useAuth } from "../features/auth/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
-    const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const { loginUser } = useAuth();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    
-//     // Simulate API call
-//     setTimeout(() => {
-//       if (form.email && form.password) {
-//         loginUser({ name: "John Doe", email: form.email }, "fake-token");
-//       } else {
-//         setError("Please fill in all fields");
-//         setTimeout(() => setError(""), 3000);
-//       }
-//       setLoading(false);
-//     }, 1000);
-//   };
-
-
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError("");
+  setSuccess("");
+  
+  try {
     const res = await login(form);
     if (res.token) {
-      loginUser(res.user, res.token);
-      navigate("/dashboard");
+      setSuccess("Login successful! Redirecting...");
+      loginUser(res.user, res.token); 
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
     } else {
-      setError(res.message || "Login failed");
-      setTimeout(()=>setError(""),1500)
+      setError(res.message || "Login failed. Please try again.");
+      setTimeout(() => setError(""), 3000);
     }
-  };
+  } catch (err) {
+    setError("An unexpected error occurred. Please try again.");
+    setTimeout(() => setError(""), 3000);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4 transition-colors">
@@ -56,8 +57,14 @@ const Login = () => {
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
+            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl animate-fadeIn">
               <p className="text-red-600 dark:text-red-400 text-center font-medium">{error}</p>
+            </div>
+          )}
+
+          {success && (
+            <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl animate-fadeIn">
+              <p className="text-green-600 dark:text-green-400 text-center font-medium">{success}</p>
             </div>
           )}
 
@@ -70,6 +77,7 @@ const Login = () => {
               onChange={handleChange}
               placeholder="Enter your email"
               required
+              disabled={loading}
             />
             <Input
               label="Password"
@@ -79,12 +87,14 @@ const Login = () => {
               onChange={handleChange}
               placeholder="Enter your password"
               required
+              disabled={loading}
             />
 
             <Button
               type="submit"
               loading={loading}
               className="w-full"
+              disabled={loading}
             >
               Sign In
             </Button>
@@ -104,7 +114,7 @@ const Login = () => {
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 export default Login;

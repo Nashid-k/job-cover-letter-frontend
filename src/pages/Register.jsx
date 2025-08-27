@@ -6,54 +6,36 @@ import { useNavigate, Link } from "react-router-dom";
 import { UserPlus, CheckCircle, AlertCircle } from "lucide-react";
 
 const Register = () => {
-const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     setLoading(true);
-    
-//     // Simulate API call
-//     setTimeout(() => {
-//       if (form.name && form.email && form.password) {
-//         setSuccess("Registration successful! Redirecting to login...");
-//          setTimeout(() => navigate("/login"), 2000);
-//       } else {
-//         setError("Please fill in all fields");
-//         setTimeout(() => setError(""), 3000);
-//       }
-//       setLoading(false);
-//     }, 1000);
-//   };
-
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess("");
 
     try {
       const res = await register(form);
       if (res.message === "Account created successfully") {
         setSuccess("Registration successful! Redirecting to login...");
-        setTimeout(() => navigate("/login"), 2000);
+        setTimeout(() => navigate("/login"), 3000);
       } else {
-        setError(res.message || "Registration failed");
-        setTimeout(() => setError(""), 4000);
+        setError(res.message || "Registration failed. Please try again.");
+        setTimeout(() => setError(""), 3000);
       }
     } catch (err) {
-      setError("Something went wrong. Please try again.");
-      setTimeout(() => setError(""), 4000);
-      console.err(err.message)
+      setError("An unexpected error occurred. Please try again.");
+      setTimeout(() => setError(""), 3000);
+      console.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -64,6 +46,9 @@ const [form, setForm] = useState({ name: "", email: "", password: "" });
       <div className="w-full max-w-md">
         <div className="bg-white/70 dark:bg-gray-800/70 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/20 dark:border-gray-700/30 p-8 transition-colors">
           <div className="text-center mb-8">
+            <div className="flex justify-center mb-4">
+              <UserPlus className="h-12 w-12 text-green-500" />
+            </div>
             <h2 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
               Create Account
             </h2>
@@ -71,13 +56,20 @@ const [form, setForm] = useState({ name: "", email: "", password: "" });
           </div>
 
           {error && (
-            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl">
-              <p className="text-red-600 dark:text-red-400 text-center font-medium">{error}</p>
+            <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl animate-fadeIn">
+              <div className="flex items-center">
+                <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
+                <p className="text-red-600 dark:text-red-400 font-medium">{error}</p>
+              </div>
             </div>
           )}
+          
           {success && (
-            <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
-              <p className="text-green-600 dark:text-green-400 text-center font-medium">{success}</p>
+            <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl animate-fadeIn">
+              <div className="flex items-center">
+                <CheckCircle className="h-5 w-5 text-green-500 mr-2" />
+                <p className="text-green-600 dark:text-green-400 font-medium">{success}</p>
+              </div>
             </div>
           )}
 
@@ -89,6 +81,7 @@ const [form, setForm] = useState({ name: "", email: "", password: "" });
               onChange={handleChange}
               placeholder="Enter your full name"
               required
+              disabled={loading}
             />
             <Input
               label="Email"
@@ -98,6 +91,7 @@ const [form, setForm] = useState({ name: "", email: "", password: "" });
               onChange={handleChange}
               placeholder="Enter your email"
               required
+              disabled={loading}
             />
             <Input
               label="Password"
@@ -107,6 +101,7 @@ const [form, setForm] = useState({ name: "", email: "", password: "" });
               onChange={handleChange}
               placeholder="Create a password"
               required
+              disabled={loading}
             />
 
             <Button
@@ -114,6 +109,7 @@ const [form, setForm] = useState({ name: "", email: "", password: "" });
               loading={loading}
               variant="success"
               className="w-full"
+              disabled={loading}
             >
               Create Account
             </Button>
