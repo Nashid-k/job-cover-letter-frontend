@@ -10,6 +10,7 @@ import Button from "../components/Button";
 import { User, Upload, Settings, Check, X } from "lucide-react";
 
 export default function Profile() {
+  // eslint-disable-next-line no-unused-vars
   const { user } = useAuth();
   const [profile, setProfile] = useState({});
   const [form, setForm] = useState({
