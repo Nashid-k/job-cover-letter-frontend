@@ -5,35 +5,19 @@ import {
   Briefcase, 
   FileText, 
   Sparkles, 
-  Users, 
   CheckCircle, 
-  ChevronRight,
   Github,
   Linkedin,
   Mail,
   Star,
   Target,
-  LayoutDashboard,
-  User as UserIcon,
-  Award,
-  BarChart3,
-  Shield,
-  Zap
+  LayoutDashboard
 } from "lucide-react";
 
 const JobSeekerLanding = () => {
   const [currentFeature, setCurrentFeature] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-    
-    const interval = setInterval(() => {
-      setCurrentFeature((prev) => (prev + 1) % features.length);
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const [scrolled, setScrolled] = useState(false);
 
   const features = [
     {
@@ -86,10 +70,33 @@ const JobSeekerLanding = () => {
     }
   ];
 
+  useEffect(() => {
+    setIsVisible(true);
+    
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    const interval = setInterval(() => {
+      setCurrentFeature((prev) => (prev + 1) % features.length);
+    }, 4000);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-      {/* Navigation */}
-      <nav className="fixed w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md z-50 border-b border-gray-200 dark:border-gray-800">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Fixed Navigation */}
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${
+        scrolled 
+          ? 'bg-white/95 dark:bg-gray-900/95 shadow-lg border-b border-gray-200 dark:border-gray-800' 
+          : 'bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
@@ -102,13 +109,22 @@ const JobSeekerLanding = () => {
             </div>
             
             <div className="hidden md:flex items-center space-x-6">
-              <a href="#features" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <a 
+                href="#features" 
+                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+              >
                 Features
               </a>
-              <a href="#testimonials" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <a 
+                href="#testimonials" 
+                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+              >
                 Testimonials
               </a>
-              <a href="#about" className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <a 
+                href="#about" 
+                className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors font-medium"
+              >
                 About
               </a>
             </div>
@@ -122,7 +138,7 @@ const JobSeekerLanding = () => {
               </Link>
               <Link
                 to="/register"
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors shadow-md hover:shadow-lg"
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-all shadow-md hover:shadow-lg"
               >
                 Get Started
               </Link>
@@ -132,65 +148,74 @@ const JobSeekerLanding = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
+      <section className="pt-24 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
-            <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              Land Your Dream Job with
-              <span className="text-blue-600 dark:text-blue-400"> AI-Powered</span> Tools
-            </h1>
+            <div className={`transition-all duration-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
+                Land Your Dream Job with
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600"> AI-Powered</span> Tools
+              </h1>
+            </div>
             
-            <p className={`text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-10 transition-all duration-700 delay-150 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              Create professional cover letters, optimize your resume, and track your job applications—all in one place.
-            </p>
+            <div className={`transition-all duration-700 delay-150 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-10 leading-relaxed">
+                Create professional cover letters, optimize your resume, and track your job applications—all in one place.
+              </p>
+            </div>
             
             <div className={`flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-16 transition-all duration-700 delay-300 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               <Link
                 to="/register"
-                className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
+                className="group w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all flex items-center justify-center"
               >
                 Get Started Free
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Link>
               
               <Link
                 to="/login"
-                className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300 rounded-xl font-semibold shadow-sm hover:shadow-md transition-all"
+                className="w-full sm:w-auto px-8 py-4 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-600 text-gray-700 dark:text-gray-300 rounded-xl font-semibold shadow-sm hover:shadow-md transition-all"
               >
                 Sign In
               </Link>
             </div>
             
-            <div className={`bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-2 max-w-4xl mx-auto border border-gray-200 dark:border-gray-700 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl p-8 text-center">
-                <div className="flex items-center justify-center mb-6">
-                  <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center mr-4">
-                    <LayoutDashboard className="h-8 w-8 text-white" />
+            {/* Dashboard Preview */}
+            <div className={`bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-3 max-w-4xl mx-auto border border-gray-200 dark:border-gray-700 transition-all duration-700 delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+              <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-700 rounded-2xl p-8 text-center relative overflow-hidden">
+                <div className="relative z-10">
+                  <div className="flex items-center justify-center mb-6">
+                    <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mr-4">
+                      <LayoutDashboard className="h-8 w-8 text-white" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-white">JobSeeker Dashboard</h2>
                   </div>
-                  <h2 className="text-2xl font-bold text-white">JobSeeker Dashboard</h2>
+                  <p className="text-blue-100 mb-6 text-lg">Experience our intuitive dashboard designed for job seekers</p>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 max-w-md mx-auto">
+                    <div className="bg-white/15 rounded-xl p-4">
+                      <div className="text-white font-bold text-2xl">12</div>
+                      <div className="text-blue-100 text-sm">Cover Letters</div>
+                    </div>
+                    <div className="bg-white/15 rounded-xl p-4">
+                      <div className="text-white font-bold text-2xl">8</div>
+                      <div className="text-blue-100 text-sm">Applications</div>
+                    </div>
+                    <div className="bg-white/15 rounded-xl p-4">
+                      <div className="text-white font-bold text-2xl">15</div>
+                      <div className="text-blue-100 text-sm">Skills</div>
+                    </div>
+                  </div>
+                  
+                  <Link
+                    to="/register"
+                    className="group inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-xl font-semibold hover:bg-gray-50 transition-all"
+                  >
+                    Try Dashboard
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Link>
                 </div>
-                <p className="text-blue-100 mb-6">Experience our intuitive dashboard designed for job seekers</p>
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="bg-white/10 rounded-lg p-3">
-                    <div className="text-white font-bold text-lg">12</div>
-                    <div className="text-blue-100 text-sm">Cover Letters</div>
-                  </div>
-                  <div className="bg-white/10 rounded-lg p-3">
-                    <div className="text-white font-bold text-lg">8</div>
-                    <div className="text-blue-100 text-sm">Applications</div>
-                  </div>
-                  <div className="bg-white/10 rounded-lg p-3">
-                    <div className="text-white font-bold text-lg">15</div>
-                    <div className="text-blue-100 text-sm">Skills</div>
-                  </div>
-                </div>
-                <Link
-                  to="/register"
-                  className="inline-flex items-center px-6 py-3 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-                >
-                  Try Dashboard
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Link>
               </div>
             </div>
           </div>
@@ -203,10 +228,10 @@ const JobSeekerLanding = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div 
-                key={index} 
-                className="text-center transition-all duration-500 hover:scale-105"
+                key={index}
+                className="text-center group cursor-default"
               >
-                <div className="text-3xl md:text-4xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+                <div className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 mb-2 group-hover:scale-110 transition-transform duration-300">
                   {stat.value}
                 </div>
                 <div className="text-gray-600 dark:text-gray-400 font-medium">
@@ -219,10 +244,10 @@ const JobSeekerLanding = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900">
+      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Everything You Need for Your Job Search
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
@@ -230,17 +255,18 @@ const JobSeekerLanding = () => {
             </p>
           </div>
           
+          {/* Featured showcase */}
           <div className="grid md:grid-cols-2 gap-8 mb-16">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-200 dark:border-gray-700">
               <div className="flex items-center mb-6">
-                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg mr-4">
+                <div className="p-3 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-xl mr-4">
                   {features[currentFeature].icon}
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                   {features[currentFeature].title}
                 </h3>
               </div>
-              <p className="text-gray-600 dark:text-gray-400 mb-6">
+              <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                 {features[currentFeature].description}
               </p>
               <div className="flex space-x-2">
@@ -248,43 +274,50 @@ const JobSeekerLanding = () => {
                   <button
                     key={index}
                     onClick={() => setCurrentFeature(index)}
-                    className={`h-2 rounded-full transition-all ${index === currentFeature ? 'w-8 bg-blue-600' : 'w-2 bg-gray-300 dark:bg-gray-600'}`}
+                    className={`h-2 rounded-full transition-all duration-300 ${
+                      index === currentFeature 
+                        ? 'w-8 bg-gradient-to-r from-blue-600 to-purple-600' 
+                        : 'w-2 bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                    }`}
                   />
                 ))}
               </div>
             </div>
             
-            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-8 text-white">
-              <h3 className="text-xl font-semibold mb-6">Why Choose JobSeeker?</h3>
-              <div className="space-y-4">
-                {[
-                  "Save hours on each job application",
-                  "Increase your interview chances",
-                  "Professional, tailored content",
-                  "Easy-to-use interface"
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center">
-                    <CheckCircle className="h-5 w-5 mr-3 text-blue-300" />
-                    <span>{item}</span>
-                  </div>
-                ))}
+            <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-blue-700 rounded-2xl p-8 text-white relative overflow-hidden">
+              <div className="relative z-10">
+                <h3 className="text-xl font-semibold mb-6">Why Choose JobSeeker?</h3>
+                <div className="space-y-4">
+                  {[
+                    "Save hours on each job application",
+                    "Increase your interview chances",
+                    "Professional, tailored content",
+                    "Easy-to-use interface"
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center group">
+                      <CheckCircle className="h-5 w-5 mr-3 text-blue-300 group-hover:scale-110 transition-transform" />
+                      <span className="group-hover:translate-x-1 transition-transform">{item}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Feature grid */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((feature, index) => (
               <div 
-                key={index} 
-                className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                key={index}
+                className="group bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-all duration-300 hover:-translate-y-2 cursor-pointer"
               >
-                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg mb-4 inline-block">
+                <div className="p-3 bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 rounded-xl mb-4 inline-block group-hover:scale-110 transition-transform">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-400 text-sm">
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </div>
@@ -297,8 +330,8 @@ const JobSeekerLanding = () => {
       <section id="testimonials" className="py-20 bg-white dark:bg-gray-800 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              Trusted by Job Seekers
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Trusted by Job Seekers Worldwide
             </h2>
             <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Join thousands of users who have successfully landed their dream jobs
@@ -308,11 +341,11 @@ const JobSeekerLanding = () => {
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
               <div 
-                key={index} 
-                className="bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 shadow-md border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg"
+                key={index}
+                className="group bg-gray-50 dark:bg-gray-900 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
               >
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold mr-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold mr-4 group-hover:scale-110 transition-transform">
                     {testimonial.avatar}
                   </div>
                   <div>
@@ -324,10 +357,10 @@ const JobSeekerLanding = () => {
                     </p>
                   </div>
                 </div>
-                <p className="text-gray-600 dark:text-gray-400 italic">
+                <p className="text-gray-600 dark:text-gray-400 italic leading-relaxed mb-4">
                   "{testimonial.content}"
                 </p>
-                <div className="flex mt-4">
+                <div className="flex">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                   ))}
@@ -339,25 +372,25 @@ const JobSeekerLanding = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">
+      <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-blue-700 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
             Ready to Transform Your Job Search?
           </h2>
-          <p className="text-xl text-blue-100 mb-10 max-w-3xl mx-auto">
+          <p className="text-xl text-blue-100 mb-10 max-w-3xl mx-auto leading-relaxed">
             Join thousands of job seekers who have already landed their dream roles with JobSeeker
           </p>
           <Link
             to="/register"
-            className="inline-flex items-center px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all hover:-translate-y-1"
+            className="group inline-flex items-center px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold shadow-xl hover:shadow-2xl transition-all hover:-translate-y-1"
           >
             Get Started Free
-            <ArrowRight className="ml-2 h-5 w-5" />
+            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
       </section>
 
-      {/* About Section */}
+      {/* Footer */}
       <footer id="about" className="py-12 bg-gray-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
@@ -368,7 +401,7 @@ const JobSeekerLanding = () => {
                 </div>
                 <span className="text-xl font-bold">JobSeeker</span>
               </div>
-              <p className="text-gray-400 mb-6 max-w-md">
+              <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
                 The all-in-one platform for job seekers to create professional applications, track progress, and land dream jobs.
               </p>
               <div className="flex space-x-4">
@@ -405,7 +438,7 @@ const JobSeekerLanding = () => {
                   <p className="text-sm text-gray-400">Full Stack Developer</p>
                 </div>
               </div>
-              <p className="text-gray-400 text-sm">
+              <p className="text-gray-400 text-sm leading-relaxed">
                 Built with passion to help job seekers navigate the competitive job market.
               </p>
             </div>

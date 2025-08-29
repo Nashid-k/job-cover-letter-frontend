@@ -9,25 +9,63 @@
   
   body {
     @apply transition-colors duration-300;
+    /* Prevent white flashes by ensuring body always has background */
+    background-color: #f9fafb;
+    min-height: 100vh;
+  }
+
+  /* Dark mode body background */
+  .dark body {
+    background-color: #111827;
+  }
+
+  /* CSS variables for consistent theming */
+  :root {
+    --bg-color: #f9fafb;
+    --bg-color-secondary: #ffffff;
+  }
+
+  .dark {
+    --bg-color: #111827;
+    --bg-color-secondary: #1f2937;
+  }
+
+  /* Ensure root div takes full height */
+  #root {
+    min-height: 100vh;
+    background-color: var(--bg-color);
   }
 }
 
 @layer components {
+  /* Disable conflicting CSS animations when using Framer Motion */
   .animate-in {
-    animation-duration: 0.5s;
-    animation-fill-mode: both;
+    animation: none !important;
   }
   
+  /* Keep these for non-page transitions if needed elsewhere */
   .slide-in-from-top-5 {
     animation-name: slide-in-from-top-5;
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
   }
   
   .slide-in-from-top-2 {
     animation-name: slide-in-from-top-2;
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
   }
   
   .fade-in {
     animation-name: fade-in;
+    animation-duration: 0.3s;
+    animation-fill-mode: both;
+  }
+
+  /* Smooth page transitions */
+  .page-wrapper {
+    min-height: calc(100vh - 4rem); /* Account for navbar height */
+    background-color: var(--bg-color);
   }
 }
 
@@ -53,15 +91,14 @@
   }
 }
 
-/* @keyframes fade-in {
+@keyframes fade-in {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
   }
-} */
-
+}
 
 @keyframes fadeIn {
   from { 

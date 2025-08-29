@@ -1,5 +1,6 @@
+// App.js - Optimized structure with all motion in PageTransition only
 import React from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./features/auth/AuthContext";
 import { ThemeProvider } from "./features/theme/ThemeContext";
 import Navbar from "./components/Navbar";
@@ -9,12 +10,57 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import CoverLetter from "./pages/CoverLetter";
 import JobSeekerLanding from "./pages/LandingPage";
-import ProtectedRoute from "./components/ProtectedRoute";
+import PageTransition from "./components/PageTransition";
+import { AnimatePresence } from "framer-motion";
 
-// Create a special Navbar that only shows on authenticated routes
+function PrivateRoute({ children }) {
+  const { user } = useAuth();
+  return user ? children : <Navigate to="/login" />;
+}
+
 function AppNavbar() {
   const { user } = useAuth();
   return user ? <Navbar /> : null;
+}
+
+function AnimatedRoutes() {
+  const location = useLocation();
+  const { user } = useAuth();
+
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+      <AnimatePresence mode="wait" initial={false}>
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={
+            user ? <Navigate to="/dashboard" replace /> : 
+            <PageTransition><JobSeekerLanding /></PageTransition>
+          } />
+          <Route path="/login" element={
+            <PageTransition><Login /></PageTransition>
+          } />
+          <Route path="/register" element={
+            <PageTransition><Register /></PageTransition>
+          } />
+          <Route path="/profile" element={
+            <PrivateRoute>
+              <PageTransition><Profile /></PageTransition>
+            </PrivateRoute>
+          } />
+          <Route path="/coverletter" element={
+            <PrivateRoute>
+              <PageTransition><CoverLetter /></PageTransition>
+            </PrivateRoute>
+          } />
+          <Route path="/dashboard" element={
+            <PrivateRoute>
+              <PageTransition><Dashboard /></PageTransition>
+            </PrivateRoute>
+          } />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AnimatePresence>
+    </div>
+  );
 }
 
 export default function App() {
@@ -23,37 +69,7 @@ export default function App() {
       <ThemeProvider>
         <BrowserRouter>
           <AppNavbar />
-          <Routes>
-            <Route path="/" element={<JobSeekerLanding />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route 
-              path="/profile" 
-              element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/coverletter" 
-              element={
-                <ProtectedRoute>
-                  <CoverLetter />
-                </ProtectedRoute>
-              } 
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            {/* Catch-all route for unmatched paths */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <AnimatedRoutes />
         </BrowserRouter>
       </ThemeProvider>
     </AuthProvider>
