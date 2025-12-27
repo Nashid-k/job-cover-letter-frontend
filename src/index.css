@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#F5F5F7] text-neutral-900 dark:bg-black dark:text-white font-sans antialiased selection:bg-apple-blue selection:text-white;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Selective and targeted theme transitions - only on specific components */
+  body {
+    @apply transition-colors duration-500 ease-out;
+  }
+
+  /* Performance: Use content-visibility for off-screen sections */
+  section {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
+}
+
+@layer components {
+
+  /* Apple-style Glassmorphism - Adaptive with Performance Optimizations */
+  .glass {
+    @apply bg-white/70 dark:bg-apple-gray/70 backdrop-blur-xl border border-black/5 dark:border-white/10;
+    transform: translateZ(0);
+    contain: layout style paint;
+  }
+
+  .glass-panel {
+    @apply bg-white/80 dark:bg-apple-gray/60 backdrop-blur-2xl border border-white/40 dark:border-white/10 rounded-[20px] shadow-sm dark:shadow-2xl;
+    transition: background-color 500ms, border-color 500ms;
+    transform: translateZ(0);
+    contain: layout style paint;
+  }
+
+  .glass-button {
+    @apply bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/20 active:scale-95 backdrop-blur-md border border-black/5 dark:border-white/5 rounded-full;
+    transition: background-color 300ms, transform 200ms;
+    will-change: transform;
+  }
+
+  /* Typography Utilities */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-br from-neutral-900 via-neutral-600 to-neutral-400 dark:from-white dark:via-neutral-200 dark:to-neutral-500;
+  }
+
+  .text-primary {
+    @apply text-neutral-900 dark:text-white;
+  }
+
+  .text-secondary {
+    @apply text-neutral-500 dark:text-apple-text;
+  }
+
+  /* JD Analysis Styles */
+  .jd-analysis-container {
+    @apply relative overflow-hidden;
+  }
+
+  .skill-badge {
+    @apply inline-flex items-center gap-1 transition-all duration-300 hover:scale-105 hover:shadow-md;
+  }
+
+  .skill-badge.matched {
+    @apply animate-fade-in;
+  }
+
+  .skill-badge.missing {
+    @apply animate-fade-in;
+  }
+
+  .skill-badge.additional {
+    @apply animate-fade-in;
+  }
+
+  /* Chart wrapper for dark mode support */
+  .chart-wrapper canvas {
+    @apply dark:brightness-90;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+  /* Top-notch minimalism: hide it completely or make it super thin */
+}
+
+/* Animations */
+.hover-lift {
+  @apply transition-transform duration-300 ease-apple-ease hover:-translate-y-1;
+}
+
+.tap-scale {
+  @apply active:scale-95 transition-transform duration-200 ease-apple-ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
