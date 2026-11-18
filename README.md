@@ -1,63 +1,49 @@
-<!-- ══════════════════════════════════════════════════════════════════ -->
-<!--                     NASHID K  —  PROJECT METRICS                   -->
-<!-- ══════════════════════════════════════════════════════════════════ -->
+# Career Portfolio & Job-Search Assistant — Frontend
 
-# 🚀 job-cover-letter-frontend
+A React application that combines a developer portfolio with interactive career-support features, including job-description analysis and an AI chat experience.
 
-<p align="center">
-  ![](https://img.shields.io/badge/React-18.x-61DAFB?style=flat-square&logo=react) ![](https://img.shields.io/badge/TailwindCSS-3.x-38B2AC?style=flat-square&logo=tailwindcss) 
-</p>
+## What’s in the app
 
-<p align="center">
-  <strong>A modern web application built with JavaScript.</strong>
-</p>
+- Portfolio sections for profile, experience, education, skills and projects
+- Job-description analysis interface
+- AI chat widget
+- Responsive UI with reusable React components
+- Animated interactions and data visualizations
 
----
+## Tech stack
 
-## 📌 Project Overview
-This repository contains **job-cover-letter-frontend**, engineered with modern design standards, modular structures, and clean coding architectures.
+- React 19
+- Vite 7
+- Tailwind CSS 3
+- Framer Motion
+- OpenAI SDK
+- Chart.js / react-chartjs-2
+- React Markdown
 
-### ✨ Core Features
-*   **Tailwind CSS:** Fully responsive mobile-first styling layout.
+## Run locally
 
----
-
-## 📂 Project Architecture
-
-```text
-src/
-├── components/   # UI presentation elements
-├── config/       # Environment setup and server configurations
-├── routes/       # REST API endpoints
-└── App.js        # Core mounting file
+```bash
+git clone https://github.com/Nashid-k/job-cover-letter-frontend.git
+cd job-cover-letter-frontend
+npm install
+npm run dev
 ```
 
----
+## Available scripts
 
-## ⚙️ Local Development Setup
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start the Vite development server |
+| `npm run build` | Create a production build |
+| `npm run preview` | Preview the production build |
+| `npm run lint` | Run ESLint |
 
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/Nashid-k/job-cover-letter-frontend.git
-   cd job-cover-letter-frontend
-   ```
+## Related repository
 
-2. **Install Dependencies:**
-   ```bash
-   npm install
-   ```
+The companion API repository contains authentication, profile and cover-letter endpoints:
 
-3. **Configure Environment:**
-   *(If applicable, copy the `.env.example` file to `.env` and fill in variables)*
+[Career tools backend](https://github.com/Nashid-k/job-cover-letter-backend)
 
-4. **Start local dev server:**
-   ```bash
-   npm run dev
-   ```
+## Configuration
 
----
-
-## 🛡️ Security & Best Practices Implemented
-*   **Strict Separations:** Modular separation between config, logic, and view components.
-*   **Environment Configuration:** Secure variables kept out of repository scopes via dotenv.
-*   **Git Standards:** Maintained clean histories and semantic commit protocols.
+Configure any required API credentials and service URLs through environment variables. Do not commit real credentials; use a local `.env` file and keep it out of version control.
